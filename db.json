@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "id": "user_1",
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "password123"
+    }
+  ],
+  "todos": [
+    {
+      "id": "todo_1",
+      "userId": "user_1",
+      "task": "Learn ngrx",
+      "completed": false,
+      "createdAt": "iso_string_date"
+    }
+  ]
+}
