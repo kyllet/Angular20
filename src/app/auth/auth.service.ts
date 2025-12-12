@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { catchError, map, Observable, switchMap, throwError } from "rxjs";
-import { User } from "./auth.model";
+import { AuthResponse, User } from "./auth.model";
 import {v4 as uuidv4} from 'uuid';
 
 @Injectable({
@@ -39,7 +39,26 @@ export class AuthService {
 
     //login
 
-    login() {}
+    login(credentials: {email: string; password: string}): Observable<AuthResponse> {
+        return this.http.get<any[]>(
+            `${this.usersURL}?email=${credentials.email.toLocaleLowerCase()}$password=${credentials.password}`
+        ).pipe(
+            map(users => {
+                if (users.length > 0) {
+                    const user = users[0];
+
+                    const {password, ...userWithoutPassword} = user;
+
+                    return {
+                        user: userWithoutPassword,
+                        accessToken: `mockToken-${user.id}-${new Date().getTime()}`
+                    }
+                }else {
+                    throw new Error('Invalid Username/password');
+                }
+            }),
+            catchError(this.handleError))        
+    }
 
     handleError(error: any): Observable<never> {
         console.error(error);
